@@ -11,15 +11,19 @@ from django.forms import BaseForm
 
 # Create your views here.
 
-def database(database,query):
+def database(database,query,args=None):
     try:
         with sql.connect(database) as con:
             cur = con.cursor()
-            cur.execute(query)
-            result = cur.fetchone()
+            if not args:
+                cur.execute(query)
+                results = cur.fetchone()
+            else:
+                cur.execute(query,args)
+                results = cur.fetchone()
     except ConnectionRefusedError as e:
         raise ConnectionRefusedError(e)
-    return result
+    return results
 
 @require_http_methods("POST")
 def database_check(response):
@@ -52,7 +56,7 @@ def create_user_account(response):
             if password1 == password2:
                 u = User(user_name=name,user_username=username,user_email=email,user_password=password1,user_birth_date=date_of_birth,logged_in=True)
                 u.save()
-                return HttpResponseRedirect('register/profile/')
+                return render(response,'UserAuth/redirect.html',{'hidden_content':'register/profile/','domain':'http://127.0.0.1:8000/'})
             else:
                 form = NewUserAccountForm()
                 heading = "The passwords do not match. Try again."
@@ -69,11 +73,13 @@ def create_user_account(response):
 @require_http_methods(["POST","GET"])
 def login(response):
     if response.method == "POST":
+        data_email = None
+        data_password = None 
         form = LogInForm(response.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            data = tuple(database('db.sqlite3',"SELECT user_email, user_password FROM User WHERE user_email = '"+email+"' and user_password = '"+password+"';"))
+            data = database('db.sqlite3',"SELECT user_email, user_password FROM User WHERE user_email = ? and user_password = ?;",args=(str(email),str(hash(password))))
             if data != None:
                 data_email = data[0]
                 data_password = data[1]
