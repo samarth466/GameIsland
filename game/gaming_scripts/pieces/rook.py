@@ -21,7 +21,6 @@ class Rook(Piece):
         self.win_height = win_height
         self.x,self.y = self.piece_x,self.piece_y
         self.attacked_pieces = []
-        self.has_moved = False
         super().__init__(self.image,self.file,self.rank,self.name,self.color)
     
     def move(self,squares,win):
@@ -44,7 +43,7 @@ class Rook(Piece):
                     win.blit(txt,(self.max_x-(txt.get_width/2)/2,self.max_y-(txt.get_height()/2)/2))
                 self.file,self.rank = self.get_game_pos()
                 for event in pygame.event.get():
-                    if event.type == pygame.K_SPACE or event.type == pygame.K_RETURN:
+                    if event.type == pygame.K_SPACE or event.type == pygame.K_KP5:
                         if (self.x,self.y,self.name) in pieces:
                             selected = False
                             pieces.pop()
@@ -57,7 +56,6 @@ class Rook(Piece):
                     if self.y == other.piece_y and self.x == other.piece_x:
                         self.y -= self.square_height
                     self.piece_y = self.y
-                    self.has_moved = True
                 if keys[pygame.K_KP4] or keys[pygame.K_4]:
                     self.x -= self.square_width
                     if self.x == other.piece_x and self.y == other.piece_y:
@@ -128,4 +126,4 @@ class Rook(Piece):
                             else:
                                 self.attacked_pieces.append((self.x,self.y))
         self.x,self.y = self.piece_x,self.piece_y
-        return self.attacked_pieces
+        return (self.attacked_pieces,(self.piece_x,self.piece_y),pieces)

@@ -20,3 +20,7 @@ class Piece:
         self.rank = self.piece_x/100+1
         self.file = possible_files[self.piece_y/100]
         return (self.file,self.rank)
+    
+    def draw(self,win):
+        x,y = self.get_window_pos()
+        win.blit(self.image,(x,y))
