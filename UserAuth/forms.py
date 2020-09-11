@@ -3,8 +3,12 @@ from UserAuth.models import User
 from UserAuth.validators import validate_isnumeric
 import datetime
 from django.contrib.auth.password_validation import MinimumLengthValidator, UserAttributeSimilarityValidator, NumericPasswordValidator
+<<<<<<< HEAD
 from UserAuth.widgets import DateInput
 from django.forms import ModelForm
+=======
+from bootstrap_datepicker_plus import DatePickerInput
+>>>>>>> 79371c4de2ebd9fb67cf9053c7b4d3ef0ead4848
 
 # Create the form class.
 
@@ -41,7 +45,12 @@ class NewUserAccountForm(forms.Form):
     user_name.label = "Enter your game name"
     now = datetime.datetime.now()
     YEARS = [x for x in range(now.year-100,now.year)]
+<<<<<<< HEAD
     date_of_birth = forms.SelectDateWidget(years=YEARS)
+=======
+    date_of_birth1 = forms.DateField(label = "Enter your date of birth", widget=forms.SelectDateWidget(years=YEARS))
+    date_of_birth2 = forms.DateField(label="Enter your date of birth ",widget=DatePickerInput(format='%m/%d/%Y'))
+>>>>>>> 79371c4de2ebd9fb67cf9053c7b4d3ef0ead4848
     email = forms.EmailField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     email.label = "Enter your email address"
     password1 = forms.CharField(label = "Enter your password", min_length = 8, max_length = 30, widget = forms.PasswordInput)
