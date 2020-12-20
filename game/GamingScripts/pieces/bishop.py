@@ -6,7 +6,7 @@ class Bishop(Piece):
     def __init__(self,image,file,rank,color,min_x,max_x,min_y,max_y,square_width,square_height,win_width,win_height):
         pygame.init()
         self.image = image
-        self.image_surface = pygame.image.load(image)
+        self.image_surface = pygame.image.load(self.image)
         self.rank = rank
         self.file = file
         self.color = color
@@ -29,7 +29,6 @@ class Bishop(Piece):
         if not isinstance(squares,list):
             raise TypeError('The squares attribute must be a list.')
         limiting_pos = [[self.min_x,self.max_x],[self.min_y,self.max_y]]
-        pieces = []
         max_length = 1
         selected = False
         direction = 0
@@ -37,19 +36,19 @@ class Bishop(Piece):
         direction_offset = 4
         pygame.font.init()
         while (self.x in limiting_pos[0] and self.y in limiting_pos[1]):
-            if len(pieces) > max_length:
+            if len(self.pieces) > max_length:
                 fnt = pygame.font.SysFont("comicsans",40)
                 txt = fnt.render("You can't select that piece because you have already selected a piece. You must either move the already selected piece or unselect it.")
-                win.blit(txt,(self.max_x-(txt.get_width/2)/2,self.max_y-(txt.get_height()/2)/2))
+                win.blit(txt,(self.max_x-(txt.get_width/2)/2,(self.x,self.y))
             self.file,self.rank = self.get_game_pos()
             for event in pygame.event.get():
                 if event.type == pygame.K_SPACE or event.type == pygame.K_RETURN:
                     if (self.x,self.y,self.name) in pieces:
                         selected = False
-                        pieces.pop()
+                        self.pieces.pop()
                     else:
                         selected = True
-                        pieces.append((self.x,self.y,self.name))
+                        self.pieces.append((self.x,self.y,self.name))
             keys = pygame.key.get_pressed()
             if keys[pygame.K_KP1] or keys[pygame.K_1] and not (keys[pygame.K_KP1] and keys[pygame.K_1]):
                 self.x,self.y = self._move(self.x,self.y,-self.square_width,-self.square_height,squares)

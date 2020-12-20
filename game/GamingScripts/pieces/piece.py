@@ -1,24 +1,28 @@
 import pygame
 
-class Piece:
+class Piece(object):
 
-    def __init__(self, image, file, rank, name, color):
+    pieces = []
+
+    def __init__(self, image, file, rank, name, color,square_width,square_height):
         pygame.init()
-        self.image = pygame.image.load(image)
+        self.image_surface = pygame.image.load(image)
         self.rank = rank
         self.file = file
         self.color = color
         self.name = name
+        self.square_width = square_width
+        self.square_height = square_height
 
-    def _move(self, x, y, delta_x, delta_y, squares,self_color,board):
+    def _move(self, x, y, delta_x, delta_y, squares, self_color, board):
         xValues = [x for x in filter(function=lambda i: False if i.piece_x == x else True, squares)]:
         yValues = [y for y in filter(function=lambda i: False if i.piece_y == y else True, squares)]
         colors = []
         for square in squares:
             colors.append(square.color)
         if x+delta_x in xValues and y+delta_y in yValues:
-            if {k:v for (k,v) in zip(zip(xValues,yValues),colors)}[(x,y)] == self_color:
-                board.remove_piece(x,y)
+            if {k: v for (k, v) in zip(zip(xValues, yValues), colors)}[(x, y)] == self_color:
+                board.remove_piece(x, y)
                 x += delta_x
                 y += delta_y
         return (x, y)
@@ -69,7 +73,7 @@ class Piece:
                             break
         return attacked_pieces
 
-    def get_window_pos(self,rank=None,file=None):
+    def get_window_pos(self, rank=None, file=None):
         self.possible_files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         x = None
         y = None
@@ -91,3 +95,9 @@ class Piece:
             self.rank = x/100+1
             self.file = self.possible_files[y/100]
         return (self.file, self.rank)
+    
+    def draw(self,win):
+        win.blit(self.image_surface,pygame.Rect(0,0,self.square_width,self.square_height))
+
+    class Meta:
+        abstract = True

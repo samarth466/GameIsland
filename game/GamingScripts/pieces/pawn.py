@@ -70,7 +70,6 @@ class Pawn(Piece):
         if not isinstance(squares,list):
             raise TypeError('The squares arguement must be of type list(), not '+str(type(squares))[8:-1].capitalize()+'().')
         limiting_pos = [[self.min_x,self.max_x],[self.min_y,self.max_y]]
-        pieces = []
         max_length = 1
         selected = False
         direction = 0
@@ -78,7 +77,7 @@ class Pawn(Piece):
         direction_offset = 0
         pygame.font.init()
         while (self.x in limiting_pos[0] and self.y in limiting_pos[1]):
-            if len(pieces) > max_length:
+            if len(self.pieces) > max_length:
                 fnt = pygame.font.SysFont("comicsans",40)
                 txt = fnt.render("You cannot move that piece, because you have already selected a piece. You must move the already selected piece or move it.",1,RED)
                 win.blit(txt,(self.get_window_pos()[0],self.get_window_pos()[1]))
@@ -87,10 +86,10 @@ class Pawn(Piece):
                 if event.type == pygame.K_SPACE or event.type == pygame.K_RETURN:
                     if (self.x,self.y,self.name) in pieces:
                         selected = False
-                        pieces.pop()
+                        self.pieces.pop()
                     else:
                         selected = True
-                        pieces.append((self.x,self.y,self.name))
+                        self.pieces.append((self.x,self.y,self.name))
             keys = pygame.key.get_pressed()
             if ((keys[pygame.K_RALT] and keys[K_KP7]) or (keys[pygame.K_LALT] and keys[pygame.K_KP7]) or (keys[pygame.K_RALT] and keys[pygame.K_7]) or (keys[pygame.K_LALT] and keys[pygame.K_7])) and not ((keys[pygame.K_RALT] and keys[K_KP7]) and (keys[pygame.K_LALT] and keys[pygame.K_KP7]) and (keys[pygame.K_RALT] and keys[pygame.K_7]) and (keys[pygame.K_LALT] and keys[pygame.K_7])):
                 self.x,self.y = self._move(self.x,self.y,-self.square_width,-self.square_height,squares,self.color,board,False)

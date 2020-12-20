@@ -29,7 +29,6 @@ class Rook(Piece):
         if not isinstance(squares,list):
             raise TypeError('The squares attribute must be a list(), not '+str(type(squares))[8:-1].capitalize()+'().')
         limiting_pos = [[self.min_x,self.max_x],[self.min_y,self.max_y]]
-        pieces = []
         max_length = 1
         selected = False
         direction = 0
@@ -37,19 +36,19 @@ class Rook(Piece):
         direction_offset = 0
         pygame.font.init()
         while (self.x in limiting_pos[0] and self.y in limiting_pos[1]):
-            if len(pieces) > max_length:
+            if len(self.pieces) > max_length:
                 fnt = pygame.font.SysFont("comicsans",40)
                 txt = fnt.render("You can't select that piece because you have already selected a piece. You must either move the already selected piece or unselect it.")
-                win.blit(txt,(self.max_x-(txt.get_width/2)/2,self.max_y-(txt.get_height()/2)/2))
+                win.blit(txt,(self.max_x-(txt.get_width/2)/2,(self.x,self.y))
             self.file,self.rank = self.get_game_pos()
             for event in pygame.event.get():
                 if event.type == pygame.K_SPACE or event.type == pygame.K_RETURN:
                     if (self.x,self.y,self.name) in pieces:
                         selected = False
-                        pieces.pop()
+                        self.pieces.pop()
                     else:
                         selected = True
-                        pieces.append((self.x,self.y,self.name))
+                        self.pieces.append((self.x,self.y,self.name))
             keys = pygame.key.get_pressed()
             if keys[pygame.K_KP2] or keys[pygame.K_2]:
                 _,self.y = self._move(self.x,self.y,0,self.square_height,squares)
