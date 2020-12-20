@@ -1,22 +1,28 @@
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, HttpResponseNotAllowed
 from UserAuth.models import User
-import pandas as pd
 import sqlite3 as sql
 from UserAuth.forms import RegistrationForm, LogInForm, NewUserAccountForm, ProfileForm
 from django.views.decorators.http import require_http_methods
 from django.urls import reverse
 import datetime
-from django.forms import BaseForm
 
 # Create your views here.
 
-def database(database,query):
+URLHOST = 'http://127.0.0.1:8000/'
+
+def database(database,query,params):
     try:
         with sql.connect(database) as con:
             cur = con.cursor()
-            cur.execute(query)
-            result = cur.fetchone()
+            if params:
+                cur.execute(query,params)
+                result = cur.fetchone()
+            else:
+                cur.execute(query)
+                result = cur.fetchone()
+    except TypeError as t:
+        raise TypeError(t)
     except ConnectionRefusedError as e:
         raise ConnectionRefusedError(e)
     return result
@@ -26,13 +32,15 @@ def database_check(response):
     form = RegistrationForm(response.POST)
     if form.is_valid():
         email = form.cleaned_data["email"]
-        has_email = database('db.sqlite3',"SELECT user_email FROM User WHERE user_email = '"+email+"';")
-        logged_in = database('db.sqlite3',"SELECT logged_in FROM User WHERE user_email = '"+email+"';")
-        if logged_in == False:
-            return HttpResponseRedirect('register/login')
+        has_email = database('db.sqlite3',"SELECT user_email FROM User WHERE user_email = ?;",(email,))
+        logged_in = None
+        if has_email:
+            logged_in = database('db.sqlite3',"SELECT logged_in FROM User WHERE user_email = ?;",(email,))
+        if not logged_in:
+            return HttpResponseRedirect(URLHOST+'register/login')
         else:
             response.session['email'] = email
-            return HttpResponseRedirect('register/register/')
+            return HttpResponseRedirect(URLHOST+'register/register/')
 
 def forum(request):
     form = RegistrationForm

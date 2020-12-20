@@ -15,6 +15,7 @@
                 {{ form.as_ul }}<br>
             {% endblock %}
             <input id="Next" type="submit" name="Next" value="{{ val }}">
+            {% block javascript %}{% endblock %}
         </form>
     </body>
 </html>
