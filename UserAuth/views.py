@@ -4,6 +4,7 @@ from UserAuth.models import User
 import sqlite3 as sql
 from UserAuth.forms import RegistrationForm, LogInForm, NewUserAccountForm, ProfileForm
 from django.views.decorators.http import require_http_methods
+<<<<<<< HEAD
 
 domain = 'http://127.0.0.1:8000/'
 database_name = 'db.sqlite3'
@@ -20,6 +21,27 @@ def database(database,query,args=None):
             else:
                 cur.execute(query,args)
                 results = cur.fetchone()
+=======
+from django.urls import reverse
+import datetime
+
+# Create your views here.
+
+URLHOST = 'http://127.0.0.1:8000/'
+
+def database(database,query,params):
+    try:
+        with sql.connect(database) as con:
+            cur = con.cursor()
+            if params:
+                cur.execute(query,params)
+                result = cur.fetchone()
+            else:
+                cur.execute(query)
+                result = cur.fetchone()
+    except TypeError as t:
+        raise TypeError(t)
+>>>>>>> master
     except ConnectionRefusedError as e:
         raise ConnectionRefusedError(e)
     return results
@@ -29,6 +51,7 @@ def database_check(response):
     form = RegistrationForm(response.POST)
     if form.is_valid():
         email = form.cleaned_data["email"]
+<<<<<<< HEAD
         has_email = database(database_name,"SELECT user_email FROM User WHERE email = ?;",(str(email),))
         logged_in = database('db.sqlite3',"SELECT logged_in FROM User WHERE user_email = ?;",(str(email),))
         if logged_in == False and has_email:
@@ -36,6 +59,17 @@ def database_check(response):
         else:
             response.session['email'] = email
             return render(request,'UserAuth/redirect.html',{'domain':domain,'hidden_content':'register/register/'})
+=======
+        has_email = database('db.sqlite3',"SELECT user_email FROM User WHERE user_email = ?;",(email,))
+        logged_in = None
+        if has_email:
+            logged_in = database('db.sqlite3',"SELECT logged_in FROM User WHERE user_email = ?;",(email,))
+        if not logged_in:
+            return HttpResponseRedirect(URLHOST+'register/login')
+        else:
+            response.session['email'] = email
+            return HttpResponseRedirect(URLHOST+'register/register/')
+>>>>>>> master
 
 def forum(request):
     form = RegistrationForm
