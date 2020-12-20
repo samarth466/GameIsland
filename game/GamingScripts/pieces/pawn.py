@@ -74,7 +74,7 @@ class Pawn(Piece):
         max_length = 1
         selected = False
         direction = 0
-        max_direction = 4
+        max_direction = 2
         direction_offset = 0
         pygame.font.init()
         while (self.x in limiting_pos[0] and self.y in limiting_pos[1]):
@@ -115,3 +115,8 @@ class Pawn(Piece):
                 self.piece_x = self.x
                 self.piece_y = self.y
                 self.has_moved = True
+            while direction < max_direction:
+                if direction == 0:
+                        self.attacked_pieces = self._update_attacked_pieces(self.x,self.y,-self.square_width,-self.square_height,self.square_width,self.square_height,squares,self.color)
+                    if direction == 1:
+                        self.attacked_pieces = self._update_attacked_pieces(self.x,self.y,self.square_width,-self.square_height,self.square_width,self.square_height,squares,self.color)
