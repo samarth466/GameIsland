@@ -1,5 +1,5 @@
 import pygame
-from game.gaming_scripts.pieces.piece import Piece
+from .piece import Piece
 
 class Bishop(Piece):
 

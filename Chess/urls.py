@@ -18,6 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('register/', include('UserAuth.urls')),
-    path('admin/', admin.site.urls),
-    path('settings/', include('settings.urls'))
+    path('google/',include('google_oauth2.urls')),
+    path('settings/', include('settings.urls')),
+    path('admin/',admin.site.urls)
 ]

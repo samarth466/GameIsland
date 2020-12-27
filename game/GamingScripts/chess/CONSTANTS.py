@@ -7,9 +7,10 @@ GREY = (128, 128, 128)
 RED = (255, 0, 0)
 SQUARE_WIDTH = 100
 SQUARE_HEIGHT = 100
-WIN_WIDTH = 100
+WIN_WIDTH = 800
 WIN_HEIGHT = 800
+UPPER_OFFSET = 300
+LOWER_OFFSET = 300
 pygame.init()
-pygame.display.init()
-WIN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 MANAGER = pygame_gui.UIManager((WIN_WIDTH, WIN_HEIGHT))

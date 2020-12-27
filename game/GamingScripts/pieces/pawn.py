@@ -28,11 +28,11 @@ class Pawn(Piece):
         self.has_moved = False
         super().__init__(self.image, self.file, self.rank, self.name, self.color)
 
-    def _move(self, x, y, delta_x, delta_y, squares, self_color, board, skip_step):
+    def _move(self, curr_x, curr_y, delta_x, delta_y, squares, self_color, board, skip_step):
         if delta_y == 0:
             raise ValueError('The delta_y cannot be 0.')
-        xValues = [x for x in filter(function=lambda i: False if i.piece_x == x else True, squares)]:
-        yValues = [y for y in filter(function=lambda i: False if i.piece_y == y else True, squares)]
+        xValues = [x for x in filter(lambda i: False if i.getX() == curr_x else True, squares)]
+        yValues = [y for y in filter(lambda i: False if i.getY() == curr_y else True, squares)]
         colors = []
         for square in squares:
             colors.append(square.color)
@@ -43,17 +43,17 @@ class Pawn(Piece):
                 y += delta_y
         elif not x+delta_x in xValues and not y+delta_y in yValues and delta_x == 0 and self.has_moved:
                 y += delta_y
-            elif not x+delta_x in xValues and not y+yValues in yValues and delta_x == 0 and not self.has_moved and skip_step:
-                for _ in range(2):
-                    y += delta_x
+        elif not x+delta_x in xValues and not y+yValues in yValues and delta_x == 0 and not self.has_moved and skip_step:
+            for _ in range(2):
+                y += delta_x
         return (x,y)
     
-    def _update_attacked_pieces(self,x,y,delta_x,delta_y,square_width,square_height,squares,self_color):
+    def _update_attacked_pieces(self,curr_x,curr_y,delta_x,delta_y,square_width,square_height,squares,self_color):
         temp_x = x
         temp_y = y
         attacked_pieces = []
-        xValues = [x for x in filter(function=lambda i: True if i.x == x or i.x == x+delta_x or i.x == x-delta_x else False, squares)]
-        yValues = [y for y in filter(function=lambda i: False if i.y == y or i.y == y+delta_y else False, squares)]
+        xValues = [x for x in filter(lambda i: True if i.get != curr_x else False, squares)]
+        yValues = [y for y in filter(lambda i: False if i.getY() != curr_y else False, squares)]
         colors = []
         for square in squares:
             colors.append(square.color)
@@ -97,7 +97,7 @@ class Pawn(Piece):
                 self.piece_y = self.y
                 self.has_moved = True
             if ((keys[pygame.K_RALT] and keys[K_KP8]) or (keys[pygame.K_LALT] and keys[pygame.K_KP8]) or (keys[pygame.K_RALT] and keys[pygame.K_8]) or (keys[pygame.K_LALT] and keys[pygame.K_8])) and not ((keys[pygame.K_RALT] and keys[K_KP8]) and (keys[pygame.K_LALT] and keys[pygame.K_KP8]) and (keys[pygame.K_RALT] and keys[pygame.K_8]) and (keys[pygame.K_LALT] and keys[pygame.K_8])):
-                text_input_line = ui_text_entry_line(relative_rect=pygame.Rect(self.x,self.x,self.square_width,self.square_height),manager=MANAGER)
+                text_input_line = ui_text_entry_line(relative_rect=pygame.Rect(self.x,self.y,self.square_width,self.square_height),manager=MANAGER)
                 text_input_line.enable()
                 text_input_line.set_allowed_characters([1,2])
                 text_input_line.set_text_length_limit(1)
@@ -117,5 +117,5 @@ class Pawn(Piece):
             while direction < max_direction:
                 if direction == 0:
                         self.attacked_pieces = self._update_attacked_pieces(self.x,self.y,-self.square_width,-self.square_height,self.square_width,self.square_height,squares,self.color)
-                    if direction == 1:
-                        self.attacked_pieces = self._update_attacked_pieces(self.x,self.y,self.square_width,-self.square_height,self.square_width,self.square_height,squares,self.color)
+                if direction == 1:
+                    self.attacked_pieces = self._update_attacked_pieces(self.x,self.y,self.square_width,-self.square_height,self.square_width,self.square_height,squares,self.color)

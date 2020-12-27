@@ -41,11 +41,7 @@ class NewUserAccountForm(forms.Form):
     user_name.label = "Enter your game name"
     now = datetime.datetime.now()
     YEARS = [x for x in range(now.year-100,now.year)]
-<<<<<<< HEAD
-    date_of_birth = forms.SelectDateWidget(years=YEARS)
-=======
     date_of_birth = forms.DateField(label = "Enter your date of birth", widget=forms.DateInput())
->>>>>>> master
     email = forms.EmailField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     email.label = "Enter your email address"
     password1 = forms.CharField(label = "Enter your password", min_length = 8, max_length = 30, widget = forms.PasswordInput)

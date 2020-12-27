@@ -14,10 +14,10 @@ class Square(object):
         self.is_attacked = False
     
     def get_window_pos(self):
-        self.x = (self.rank-1)*100
         possible_files = ['a','b','c','d','e','f','g','h']
-        self.y = possible_files.index(self.file.lower())*100
-        return (self.x,self.y)
+        x = possible_files.index(self.file.lower())*100
+        y = self.square_height*7-(self.rank-1)*100
+        return (x,y)
     
     def draw(self,win):
         x,y = self.get_window_pos()
@@ -25,3 +25,9 @@ class Square(object):
         self.draw_square = pygame.gfxdraw.rectangle(win,self.rect,self.color)
         self.piece.draw(self.draw_square)
         return self.draw_square
+    
+    def getX(self):
+        return self.get_window_pos()[0]
+    
+    def getY(self):
+        return self.get_window_pos()[1]

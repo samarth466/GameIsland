@@ -1,10 +1,11 @@
 import pygame
 
+
 class Piece(object):
 
     pieces = []
 
-    def __init__(self, image, file, rank, name, color,square_width,square_height):
+    def __init__(self, image, file, rank, name, color, square_width, square_height):
         pygame.init()
         self.image_surface = pygame.image.load(image)
         self.rank = rank
@@ -14,9 +15,9 @@ class Piece(object):
         self.square_width = square_width
         self.square_height = square_height
 
-    def _move(self, x, y, delta_x, delta_y, squares, self_color, board):
-        xValues = [x for x in filter(function=lambda i: False if i.piece_x == x else True, squares)]:
-        yValues = [y for y in filter(function=lambda i: False if i.piece_y == y else True, squares)]
+    def _move(self, curr_x, curr_y, delta_x, delta_y, squares, self_color, board):
+        xValues = [x for x in (lambda i: i.getX()) if x != curr_x]
+        yValues = [y for y in (lambda i: i.getY()) if y != curr_y]
         colors = []
         for square in squares:
             colors.append(square.color)
@@ -27,10 +28,10 @@ class Piece(object):
                 y += delta_y
         return (x, y)
 
-    def _update_attacked_pieces(self, direction, x, y, lower_x_bound=None, upper_x_bound=None, lower_y_bound=None, upper_y_bound=None, delta_x, delta_y, square_width, square_height, squares, self_color):
+    def _update_attacked_pieces(self, direction, curr_x, curr_y, delta_x, delta_y, square_width, square_height, squares, self_color, lower_x_bound=None, upper_x_bound=None, lower_y_bound=None, upper_y_bound=None):
         attacked_pieces = []
-        xValues = [x for x in filter(function=lambda i: False if i.piece_x == x else True, squares)]:
-        yValues = [y for y in filter(function=lambda i: False if i.piece_y == y else True, squares)]
+        xValues = [x for x in filter(lambda i: False if i.piece_x == curr_x else True, squares)]
+        yValues = [y for y in filter(lambda i: False if i.piece_y == curr_y else True, squares)]
         colors = []
         for square in squares:
             colors.append(square.color)
@@ -78,26 +79,27 @@ class Piece(object):
         x = None
         y = None
         if rank and file:
-            x = (rank-1)*100
-            y = self.possible_files.index(file)*100
+            x = self.possible_files.index(file.lower())*100
+            y = self.square_height*7-(self.rank-1)*100
         else:
-            x = (self.rank-1)*100
-            y = self.possible_files.index(self.file)*100
+            x=self.possible_files.index(self.file.lower())*100
+            y=self.square_height*7-(rank-1)*100
         return (x, y)
 
-    def get_game_pos(self, x=None, y=None):
-        self.file = None
-        self.rank = None
-        if not x and not y:
-            self.rank = self.piece_x/100+1
-            self.file = self.possible_files[self.piece_y/100]
+    def get_game_pos(self, x = None, y = None):
+        file=None
+        rank=None
+        if x and y:
+            rank=x/100+1
+            file=self.possible_files[(self.square_height*8-y)/100-1]
         else:
-            self.rank = x/100+1
-            self.file = self.possible_files[y/100]
+            rank=x/100+1
+            file=self.possible_files[(self.square_height*8-y)/100-1]
         return (self.file, self.rank)
-    
-    def draw(self,win):
-        win.blit(self.image_surface,pygame.Rect(0,0,self.square_width,self.square_height))
+
+    def draw(self, win):
+        win.blit(self.image_surface, pygame.Rect(
+            0, 0, self.square_width, self.square_height))
 
     class Meta:
-        abstract = True
+        abstract=True
