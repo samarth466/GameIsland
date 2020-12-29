@@ -18,4 +18,6 @@ class AuthURL(APIView):
 
 def google_callback(request,format=None):
     code = request.get.get('code')
-    
+    vars = json.load('secrets.json')
+    data = {'grant_type':'authorization_code','code':code,'redirect_uri':vars['REDIRECT_URI'],'client_id':vars['CLIENT_ID'],'client_secret':vars['client_secret']}
+    response = post('',data=data)

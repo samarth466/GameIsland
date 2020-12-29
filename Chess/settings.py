@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'tournaments.apps.TournamentsConfig',
     'game.apps.GameConfig',
-    'settings.apps.SettingsConfig',
     'UserAuth.apps.UserauthConfig',
+    'settings.apps.SettingsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,10 +69,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.core.context_processors.i18n',
-                'django.core.context_processors.media',
-                'django.core.context_processors.static',
-                'django.core.context_processors.tz',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -109,6 +105,12 @@ DATABASES = {
     }
 }
 """
+# Authentication
+AUTH_USER_MODEL = 'auth.User'
+
+LOGIN_URL = '/register/'
+
+LOGIN_REDIRECT_URL = '/google/log-in/'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -147,9 +149,6 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # additional settings
-LOGIN_URL = '/register/'
-LOGIN_REDIRECT_URL = '/google/log-in/'
-LOGOUT_REDIRECT_URL = '/register/'
 #SECURE_SSL_REDIRECT = True
 #SECURE_REDIRECT_EXEMPT = [r'^no-ssl/$']
 EMAIL_HOST = 'localhost'
