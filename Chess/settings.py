@@ -106,7 +106,7 @@ DATABASES = {
 }
 """
 # Authentication
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'UserAuth.User'
 
 LOGIN_URL = '/register/'
 

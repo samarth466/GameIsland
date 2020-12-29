@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 
-class User(models.Model):
+class User(AbstractUser):
     username_validator = UnicodeUsernameValidator()
     first_name = models.CharField(max_length=200, default=None, null=True)
     username = models.CharField(max_length=128, unique=True, validators=[username_validator], error_messages={

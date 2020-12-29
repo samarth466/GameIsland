@@ -5,7 +5,8 @@ from UserAuth.models import User
 
 
 class Settings(models.Model):
-    user = models.OneToOneField(to=User,on_delete=models.CASCADE,related_name='settings')
+    user = models.OneToOneField(
+        to=User, on_delete=models.CASCADE, related_name='settings')
     dark_color_value = models.CharField(
         max_length=500, unique=False, blank=True, null=True, default='Black')
     light_color_value = models.CharField(
