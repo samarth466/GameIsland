@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'google_oauth2.apps.GoogleOAuth2Config',
-    'rest_framework',
     'tournaments.apps.TournamentsConfig',
     'game.apps.GameConfig',
     'UserAuth.apps.UserauthConfig',

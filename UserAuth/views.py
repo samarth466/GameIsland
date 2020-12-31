@@ -27,33 +27,22 @@ def database(database, query, params):
         raise ConnectionRefusedError(e)
     return results
 
-
-@require_http_methods("POST")
 def database_check(response):
-    form = RegistrationForm(response.POST)
-    if form.is_valid():
-        email = form.cleaned_data["email"]
-        has_email = database(
-            database_name, "SELECT user_email FROM User WHERE email = ?;", (str(email),))
-        logged_in = None
-        if has_email:
-            logged_in = database(
-                'db.sqlite3', "SELECT logged_in FROM User WHERE user_email = ?;", (email,))
-            if not logged_in:
-                return HttpResponseRedirect(URLHOST+'register/login')
-        else:
-            response.session['email'] = email
-            return HttpResponseRedirect(URLHOST+'register/register/')
-
-
-def forum(request):
-    form = RegistrationForm
     context_vars = {'form': form, 'heading': 'Please fill out the form below',
                     'method': 'post', 'action': '/register/sign-in/', 'val': 'Next'}
-    return render(request, 'UserAuth/Sign In.html', context_vars)
+    if response.method == 'POST':
+        form = RegistrationForm(data=response.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            response.session['email'] = email
+    else:
+        return render(response, 'UserAuth/Sign In.html', context_vars)
 
+@require_http_methods(['GET'])
+def forum(request):
+    return render(request,'UserAuth/choose_login_method.html')
 
-def create_user_account(response):
+def create_user_account(request):
     if response.method == "POST":
         form = NewUserAccountForm(response.POST)
         if form.is_valid():
