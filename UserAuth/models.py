@@ -27,8 +27,8 @@ class User(AbstractUser):
     logged_in = models.BooleanField(default=False)
     security_pin = models.CharField(max_length=20, blank=False, null=True, default=None, validators=[
                                     validate_isnumeric], unique=True)
-#    room = models.ForeignKey(
-#        Room, on_delete = models.PROTECT, related_name = 'members', null = True, blank = True, default = None)
+    room = models.ForeignKey(
+        Room, on_delete = models.PROTECT, related_name = 'members', null = True, blank = True, default = None)
     game = models.ForeignKey(
         Game, on_delete=models.SET_NULL, related_name='members', null=True)
 
