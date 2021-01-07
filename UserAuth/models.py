@@ -32,8 +32,8 @@ class User(AbstractUser):
     game = models.ForeignKey(
         Game, on_delete=models.SET_NULL, related_name='members', null=True)
 
-    REQUIRED_FIELDS = [email, first_name,
-                       last_name, username, birth_date, password]
+    REQUIRED_FIELDS = ['email', 'first_name',
+                       'last_name', 'password']
 
     def __str__(self):
         s = "You are signed in as {}"
