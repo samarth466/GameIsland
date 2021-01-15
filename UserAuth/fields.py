@@ -1,6 +1,9 @@
 from django.db import models
+from django.conf import settings
 from datetime import date, datetime
 from django import forms
+from django.apps import apps
+from importlib import import_module
 
 
 class DateField(models.Field):
@@ -34,4 +37,20 @@ class DateField(models.Field):
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
-# class ForeignKey(models.ForeignKey)
+class PasswordField(models.CharField):
+
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.max_length = kwargs['max_length'] = 50
+        self.null = kwargs['null'] = False
+        self.blank = kwargs['blank'] = False
+    
+    def __hash__(self):
+        for app in settings.INSTALLED_APPS:
+            if app.startswith('django.'):
+                continue
+            app_name = app.split('.')[0]
+            app_models = apps.get_app_config(app_name).get_models()
+            for model in app_models:
+                for field in model._meta.get_fields():
+                    if
